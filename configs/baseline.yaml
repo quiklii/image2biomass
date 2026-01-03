@@ -1,0 +1,28 @@
+project:
+  name: biomass2prediction
+  seed: 7
+  run_name: effnet_b2_baseline
+
+data:
+  images_root: /kaggle/input/csiro-biomass
+  train_csv: /kaggle/input/csiro-biomass/train.csv
+  valid_csv: /kaggle/input/csiro-biomass/valid.csv
+
+  target_names:
+    - Dry_Clover_g
+    - Dry_Green_g
+    - Dry_Dead_g
+
+  image_size: [256, 256]
+
+dataloader:
+  batch_size: 32
+  num_workers: 4
+
+train:
+  epochs: 20
+  lr: 0.0003
+  weight_decay: 0.0001
+
+loss:
+  name: mse
