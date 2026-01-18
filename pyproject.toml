@@ -12,11 +12,17 @@ requires-python = ">=3.10"
 dependencies = [
     "numpy",
     "pandas",
-    "torch",
-    "torchvision",
-    "timm"
+    "timm",
+    "pathlib",
+    "scikit-learn"
 ]
 
+[project.optional-dependencies]
+gpu = [
+    "torch",
+    "torchvision",
+    "torchaudio"
+]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
