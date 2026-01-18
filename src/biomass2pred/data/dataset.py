@@ -41,7 +41,7 @@ class BiomassRegressionDataset(Dataset):
             image = self.transform(image)
 
         target_map = {
-            rows['target_name'] : rows['target']
+            row['target_name'] : row['target']
             for _, row in rows.iterrows()
         }
 
