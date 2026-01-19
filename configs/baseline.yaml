@@ -4,7 +4,7 @@ project:
   run_name: effnet_b2_baseline
 
 data:
-  images_root: data/train
+  images_root: data
   train_csv: data/train_split.csv
   valid_csv: data/val_split.csv
 
@@ -24,10 +24,14 @@ model:
   pretrained: true
 
 train:
-  epochs: 10
+  epochs: 20
   lr: 0.0003
   weight_decay: 0.0001
   output_dir: outputs/runs
+  unfreeze_at_epoch: 16
+  lr_multipliers:
+    head: 0.1
+    classifier: 1
 
 loss: mse
 

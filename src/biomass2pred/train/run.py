@@ -42,6 +42,7 @@ def main(config_path: str):
         pretrained=cfg['model']['pretrained'],
         num_outputs=len(cfg['data']['target_names'])
     )
+    model.to(device)
 
     # 6. Loss & optimizer
     criterion = create_loss(cfg['loss'])
@@ -54,12 +55,15 @@ def main(config_path: str):
 
     # 7. Trainer
     output_dir = Path(cfg['train']['output_dir'])
+
     trainer = Trainer(
         model=model,
         optimizer=optimizer,
         criterion=criterion,
         device=device,
-        output_dir= PROJECT_DIR / output_dir
+        output_dir= PROJECT_DIR / output_dir,
+        unfreeze_at_epoch=cfg['train']['unfreeze_at_epoch'],
+        lr_multipliers=cfg['train']['lr_multipliers']
     )
 
     #8. Train
