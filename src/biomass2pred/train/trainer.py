@@ -3,11 +3,14 @@
 import torch
 from pathlib import Path
 
+from anyio import sleep_until
+
 from biomass2pred.utils.metrics import weighted_r2
 
 class Trainer:
     def __init__(
             self,
+            run_name: str,
             model,
             optimizer,
             criterion,
@@ -16,6 +19,7 @@ class Trainer:
             unfreeze_at_epoch: int | None = None,
             lr_multipliers: dict | None = None
     ):
+        self.run_name = run_name
         self.model = model
         self.optimizer = optimizer
         self.criterion = criterion
@@ -23,6 +27,8 @@ class Trainer:
         self.output_dir = Path(output_dir)
         self.unfreeze_at_epoch = unfreeze_at_epoch
         self.lr_multipliers = lr_multipliers or {}
+        self.best_epoch = None
+        self.current_epoch = None
 
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.best_val_loss = float('inf')
@@ -156,7 +162,8 @@ class Trainer:
                 'epoch' : epoch,
                 'model_state_dict' : self.model.state_dict(),
                 'optimizer_state_dict' : self.optimizer.state_dict(),
-                'history' : self.history
+                'history' : self.history,
+                'unfreeze_at_epoch' : self.unfreeze_at_epoch
             },
             checkpoint_path
         )
@@ -167,6 +174,7 @@ class Trainer:
 
         print('Training on device:', self.device, '\n')
         for epoch in range(1, epochs + 1):
+            self.current_epoch = epoch
             if self.unfreeze_at_epoch and epoch == self.unfreeze_at_epoch:
                 self._unfreeze_conv_head()
             train_loss = self.train_epoch(train_loader)
@@ -184,7 +192,20 @@ class Trainer:
 
             if metric_fn is not None:
                 msg += f'Validation R^2: {metric_value:.4f}'
+
+            if val_loss < self.best_val_loss:
+                self.best_val_loss = val_loss
+                self.best_epoch = epoch
+                self.save_checkpoint(epoch, self.run_name + '_best')
+                msg += ' (best)'
             print(msg)
+
+        if self.best_epoch == self.current_epoch:
+            self.save_checkpoint(self.current_epoch, self.run_name + '_best_last')
+        else:
+            self.save_checkpoint(self.best_epoch, self.run_name + '_last')
+
+
 
 
 

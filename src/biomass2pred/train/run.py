@@ -57,6 +57,7 @@ def main(config_path: str):
     output_dir = Path(cfg['train']['output_dir'])
 
     trainer = Trainer(
+        run_name=cfg['project']['run_name'],
         model=model,
         optimizer=optimizer,
         criterion=criterion,
