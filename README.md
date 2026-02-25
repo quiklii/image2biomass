@@ -21,7 +21,7 @@ This project is structured as a solid **base for future improvements**:
 
 All training/experiment parameters (e.g., backbone name, image size, epochs, learning rate, freezing/unfreezing stages)
 are defined in a config file, which makes experiments reproducible and easy to compare.
----
+
 ## Quickstart
 
 ### 1) Create venv
