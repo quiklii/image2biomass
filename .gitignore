@@ -1,7 +1,11 @@
+# Text
+task.md
+
 # Data & notebooks
 data
-notebooks
-outputs
+notebooks/test.ipynb
+notebooks/validation.ipynb
+outputs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -214,6 +218,7 @@ marimo/_lsp/
 __marimo__/
 
 # JetBrains
+.idea/
 .idea/workspace.xml
 .idea/shelf/
 .idea/httpRequests/
